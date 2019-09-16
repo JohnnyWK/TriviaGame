@@ -1,67 +1,62 @@
-var question1 = {
-    text: "What is Prince's real name?",
-    answer: "Prince Rogers Nelson",
-    wrong: ["Roger Nelson", "Nelson Rogers", "Nelson King"],
-    correct: false
-}
+$(document).ready(function () {
 
-var question2 = {
-    text: "What was the name for Prince's symbol? (when he went by 'The Artist formerly known as Prince')",
-    answer: "Love Symbol #2",
-    wrong: ["Love Potion Number 9", "The Artist", "Prince Symbol", "It didn't have a name."],
-    correct: false
-}
 
-var question3 = {
-    text: "Which of the following songs wasn't written by Prince?",
-    answer: "I Wanna Dance With Somebody",
-    wrong: ["Jungle Love", "Nothing Compares 2 U", "Manic Monday"],
-    correct: false
-}
+    
+    var correct = 0;
+    var incorrect = 0;
+    var time = 60;
+    var intervalId;
 
-var question4 = {
-    text: "In 2017, Pantone named a shade of purple for Prince.  What did they name it?",
-    answer: "Love Symbol #2",
-    wrong: ["Purple Rain", "Love Potion #9", "Purple Reign"],
-    correct: false
-}
-
-var questionsArray = [question1, question2, question3, question4];
-var questionsLength = questionsArray.length;
-var questionsAsked = 0;
-var intervalID;
-var timer=10;
-
-$("#startButton").click(function(){
-    populateQuestions(questionsArray);
-    $("#trivia-container").css('display', 'none');
-    $("#questions").css('display', 'inherit');
-
-});
-
-function populateQuestions(array) {
-    intervalID = setInterval(timer, 10000);
-
-    for (var i =0; i < array.length; i++) {
-        var questionDisplay = $("<h3>");
-
-        questionDisplay.text(array[i].text)
-        console.log(questionDisplay.text(array[i].text))
-        $("#questions").append(questionDisplay);
+    function run() {
+        clearInterval(intervalId);
+        intervalId = setInterval(decrement, 1200);
     }
 
-    var questionDisplay = $("<h3>");
+    function decrement() {
+        time--;
+        $("#timer").text(time);
+
+        if (time === 0) {
+            $("form").css("display", "none");
+            $("#gameOver").css("display", "block");
+            $("#correctCounter").text(correct);
+            $("#incorrectCounter").text(incorrect);
+        }
+    }
+
+    $("#start").on("click", function () {
+        $(this).css("display", "none");
+        $("form").css("display", "block");
+        run();
+
+    })
+
+    $("#submit").on("click", function (event) {
+        event.preventDefault();
+        $("form").css("display", "none");
+        $("#gameOver").css("display", "block");
+        $("#correctCounter").text(correct);
+        $("#incorrectCounter").text(incorrect);
+        
+        
+    })
+
+    $("input").on("click", function(){
+        var inputValue = $(this);
+        if (inputValue.val() === "incorrect"){
+            incorrect++;
+            $(this).parents("#question").nextAll();
+        }
+        else {
+            correct++;
+            $(this).parents("#question").nextAll();''            
+        }
+       
+        
+    })
 
 
 
 
 
-	$("#questions").html("<div><h4>" + array.text);
-	$("#answers").html("<div class='text-center btn btn-info btn-block' data-correct='true'>" + array.answer);
-
-	// for (var i = 0; i < array.wrong.length; i++) {
-	// // 	$("#answers").append("<div class='text-center btn btn-info btn-block' data-correct='false'>" + array.wrong[i]);
-	// // };
-
-}
-
+})
